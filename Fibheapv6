@@ -1,0 +1,1103 @@
+#include <iostream>
+#include <bits/stdc++.h>
+#include <string>
+using namespace std;
+//#include "FibonacciHeap.cpp"
+//#include "Node.h"
+//#include "CircularLinkedListClass.h"
+class Node {
+public:
+	int data;
+	Node *right_sibling;
+	Node *left_sibling;
+	Node *parent;
+	Node *child;
+	//CircularLinkedListClass* child_list;
+	int degree; //no. of children
+	bool mark;
+//		CircularLinkedListClass *cls;
+//
+
+	Node() {
+
+		data = 0;
+		degree = 0;
+		mark = false;
+		right_sibling = NULL;
+
+		parent = NULL;
+		child = NULL;
+		left_sibling = NULL;
+
+	}
+
+	Node(int value) {
+
+		data = value;
+		degree = 0;
+		mark = false;
+
+
+		parent = NULL;
+		child = NULL;
+		left_sibling = NULL;
+		right_sibling = NULL;
+
+	}
+
+};
+
+class CircularLinkedListClass {
+
+public:
+//    struct node{
+//        int data;
+//        node* right_sibling;
+//        node* left_sibling;
+//        node* parent;
+//        node* child;
+//        CircularLinkedListClass* child_list;
+//        int degree;//no. of children
+//        bool mark;
+//    };
+//
+
+	Node *head = (Node*) NULL;
+	Node *tail = (Node*) NULL;
+
+	CircularLinkedListClass get_new_list(Node *new_node) {
+		CircularLinkedListClass new_list;
+		new_list = new_list.insert_last_from_array(new_list, new_node);
+		return new_list;
+
+	}
+
+//functions written
+//node* add_node_last(int data)
+//void list_iteration()
+//node* insert_begin(int data)
+//void delete_given_node(node* temp1)
+//void print_head_and_tail()
+
+	int size_of_list = 0;
+	Node* insert_begin(int data) {
+
+		Node *new_node = new Node();
+
+		new_node->data = data;
+		if (head == (Node*) NULL && tail == head) {
+			//populate new node// create a new list
+			new_node->right_sibling = new_node;
+			new_node->left_sibling = new_node;
+			head = new_node;
+			tail = new_node;
+		} else {
+			new_node->right_sibling = head;
+			new_node->left_sibling = tail;
+			head->left_sibling = new_node;
+			tail->right_sibling = new_node;
+			head = new_node;
+
+		}
+
+		size_of_list++;
+
+		return new_node;
+
+	}
+
+	Node* insert_last(int data) {
+
+		Node *new_node = new Node;
+
+		new_node->data = data;
+		if (head == (Node*) NULL) {
+			//populate new node
+			new_node->right_sibling = new_node;
+			new_node->left_sibling = new_node;
+			head = new_node;
+			tail = new_node;
+		} else {
+			tail->right_sibling = new_node;
+			head->left_sibling = new_node;
+			new_node->left_sibling = tail;
+			new_node->right_sibling = head;
+			tail = new_node;
+
+		}
+		size_of_list++;
+
+		return new_node;
+
+	}
+
+//using pointer
+	CircularLinkedListClass insert_last(CircularLinkedListClass &temp_c_list,
+			Node *new_node) {
+
+		if (temp_c_list.head == (Node*) NULL) {
+			//populate new node
+			new_node->right_sibling = new_node;
+			new_node->left_sibling = new_node;
+			temp_c_list.head = new_node;
+			temp_c_list.tail = new_node;
+		} else {
+			temp_c_list.tail->right_sibling = new_node;
+			temp_c_list.head->left_sibling = new_node;
+			new_node->left_sibling = temp_c_list.tail;
+			new_node->right_sibling = temp_c_list.head;
+			temp_c_list.tail = new_node;
+
+		}
+		temp_c_list.size_of_list++;
+
+		return temp_c_list;
+
+	}
+
+	CircularLinkedListClass insert_last_from_array(
+			CircularLinkedListClass &temp_c_list, Node *new_node) {
+
+		if (temp_c_list.head == (Node*) NULL) {
+			//populate new node
+			temp_c_list.head = new_node;
+			temp_c_list.tail = new_node;
+		} else {
+			temp_c_list.tail->right_sibling = new_node;
+			temp_c_list.head->left_sibling = new_node;
+			new_node->left_sibling = temp_c_list.tail;
+			new_node->right_sibling = temp_c_list.head;
+			temp_c_list.tail = new_node;
+
+		}
+		size_of_list++;
+
+		return temp_c_list;
+
+	}
+
+	void delete_given_node(Node *temp) {
+
+		if (head == (Node*) NULL && tail == head) {
+			cout << "nothing to delete. Empty list" << endl;
+			return;
+		}
+
+		Node *left_siblingious_node = new Node;
+		Node *right_sibling_node = new Node;
+		left_siblingious_node = (Node*) temp->left_sibling;
+		right_sibling_node = (Node*) temp->right_sibling;
+		right_sibling_node->left_sibling = left_siblingious_node;
+		left_siblingious_node->right_sibling = right_sibling_node;
+		if (temp == head) {
+			head = right_sibling_node;
+
+		}
+
+		else if (temp == tail) {
+			tail = left_siblingious_node;
+		}
+
+		temp->right_sibling = (Node*) NULL;
+		temp->left_sibling = (Node*) NULL;
+		size_of_list--;
+	}
+
+	void print_list() {
+		Node *temp = new Node;
+		if (head == NULL && head == tail) {
+			cout << "Empty ! " << endl;
+			return;
+
+		} else {
+			temp = head;
+			while (temp->right_sibling != head) {
+				cout << temp->data << " ";
+				temp = temp->right_sibling;
+			}
+			cout << temp->data << endl;
+		}
+
+	}
+
+	void print_head_and_tail() {
+		cout << "head = " << head->data << "    " << "tail = " << tail->data
+				<< endl;
+
+	}
+
+	Node* get_new_node(int data) {
+		Node *temp = new Node;
+		temp->data = data;
+		return temp;
+
+	}
+
+	Node* concatenate_lists(CircularLinkedListClass cl1,
+			CircularLinkedListClass cl2) {
+		this->tail->right_sibling = cl2.head;
+		cl2.head->left_sibling = this->tail;
+		cl2.tail->right_sibling = this->head;
+		this->head->left_sibling = cl2.tail;
+		this->tail = (Node*) cl2.tail;
+
+		this->size_of_list = this->size_of_list + cl2.size_of_list;
+		return this->head;
+	}
+
+};
+
+class FibonacciHeap {
+
+public:
+	Node *min_ptr = NULL;
+	CircularLinkedListClass root_list;
+	int size_of_heap = 0;
+
+	//until extract min operation occurs the elements are getting added into the root list
+	//
+	//make an empty fibonacci heap
+	//use this function only to create a heap
+	FibonacciHeap make_fib_heap() {
+		FibonacciHeap fibheap;
+		fibheap.size_of_heap = 0;
+		fibheap.min_ptr = NULL;
+		return fibheap;
+	}
+
+	//make fib heap assumes that node has been already been allocated and key has been assigned to the node
+
+	//insert into the root list directly
+
+	FibonacciHeap fib_heap_insert(FibonacciHeap &temp_heap, Node *temp_node) {
+//		temp_node->degree = 0;
+//		temp_node->parent = NULL;
+//		temp_node->child = NULL;
+//		temp_node->mark = false;
+		//temp heap object is to be modified here and to be returned in the end
+		//populate the object and return the object
+		if (temp_heap.min_ptr == NULL) {
+
+			//create root list for temp heap containing only x;
+			temp_heap.root_list = temp_heap.root_list.insert_last(
+					temp_heap.root_list, temp_node);
+
+			temp_heap.min_ptr = temp_node;
+		} else {
+			//insert x into H's root list;
+			temp_heap.root_list = temp_heap.root_list.insert_last(
+					temp_heap.root_list, temp_node);
+			if ((temp_node->data) < (temp_heap.min_ptr->data)) {
+				temp_heap.min_ptr = temp_node;
+
+			}
+
+		}
+		temp_heap.size_of_heap++;
+		return temp_heap;
+
+	}
+
+	FibonacciHeap fib_heap_insert_from_array(FibonacciHeap &temp_heap,
+			Node *temp_node) {
+
+		//temp heap object is to be modified here and to be returned in the end
+		//populate the object and return the object
+		if (temp_heap.min_ptr == NULL) {
+
+			//create root list for temp heap containing only x;
+			temp_heap.root_list = temp_heap.root_list.insert_last(
+					temp_heap.root_list, temp_node);
+
+			temp_heap.min_ptr = temp_node;
+		} else {
+			//insert x into H's root list;
+			temp_heap.root_list = temp_heap.root_list.insert_last(
+					temp_heap.root_list, temp_node);
+			if ((temp_node->data) < (temp_heap.min_ptr->data)) {
+				temp_heap.min_ptr = temp_node;
+
+			}
+
+		}
+		//not increasing the size of the heap because while loading from the array the size of the heap is already configured in the
+		// heap
+		return temp_heap;
+
+	}
+
+	FibonacciHeap fib_heap_union(FibonacciHeap heap_1, FibonacciHeap heap_2) {
+
+		heap_1.root_list.tail->right_sibling = heap_2.root_list.head;
+		heap_2.root_list.head->left_sibling = heap_1.root_list.tail;
+		heap_2.root_list.tail->right_sibling = heap_1.root_list.head;
+		heap_1.root_list.head->left_sibling = heap_2.root_list.tail;
+		heap_1.root_list.tail = heap_2.root_list.tail;
+
+		heap_1.root_list.size_of_list = heap_1.root_list.size_of_list
+				+ heap_2.root_list.size_of_list;
+
+		if ((heap_1.min_ptr->data) > (heap_2.min_ptr->data)
+				or (heap_1.min_ptr == NULL)) {
+			heap_1.min_ptr = heap_2.min_ptr;
+		}
+
+		return heap_1;
+
+	}
+
+	FibonacciHeap fib_heap_decrease_key(FibonacciHeap &temp_heap, Node *x_node,
+			int key) {
+
+		if (key > x_node->data) {
+			cout << "new key is greater than current key" << endl;
+			return temp_heap;
+		}
+		x_node->data = key;
+		Node *y_node = x_node->parent;
+		if (y_node != NULL and (x_node->data) < (y_node->data)) {
+			//cut
+			temp_heap = temp_heap.fib_cut(temp_heap, x_node, y_node);
+			//cascade
+			temp_heap = temp_heap.fib_cascading_cut(temp_heap, y_node);
+
+		}
+
+		if (x_node->data < temp_heap.min_ptr->data) {
+			temp_heap.min_ptr = x_node;
+		}
+		return temp_heap;
+
+	}
+
+	FibonacciHeap fib_cut(FibonacciHeap &temp_heap, Node *x_node,
+			Node *y_node) {
+
+		// we have x node to be deleted in the y node child list
+		//first remove connections from y
+
+// y is the parent and x is the child
+
+		if (y_node->child != NULL and y_node->degree != 0) {
+
+			if (y_node->degree == 1) {
+				y_node->degree--;
+				y_node->child = NULL;
+
+			} else {
+				y_node->child = x_node->left_sibling;
+				y_node->degree--;
+				x_node->right_sibling->left_sibling = x_node->left_sibling;
+				x_node->left_sibling->right_sibling = x_node->right_sibling;
+
+			}
+		}
+		x_node->parent = NULL;
+		x_node->mark = false;
+		temp_heap.root_list = temp_heap.root_list.insert_last(
+				temp_heap.root_list, x_node);
+
+		return temp_heap;
+	}
+
+	FibonacciHeap fib_cascading_cut(FibonacciHeap &temp_heap, Node *y_node) {
+
+		Node *z_node = y_node->parent;
+		if (z_node != NULL) {
+			if (y_node->mark == false) {
+				y_node->mark = true;
+
+			} else {
+				temp_heap = temp_heap.fib_cut(temp_heap, y_node, z_node);
+				temp_heap = fib_cascading_cut(temp_heap, z_node);
+			}
+
+		}
+
+		return temp_heap;
+	}
+
+	//consolidate  function
+	// consolidate function reduces the number of trees in the fib heap
+	// consolidating the root list consists of repeatedly excecuting the following steps until every root in
+	// in the root list has a distinct degree value
+
+	unsigned int log_2n(unsigned int n) {
+
+		if (n > 1) {
+			return (1 + log_2n(n / 2));
+		} else {
+			return 0;
+		}
+
+	}
+
+	FibonacciHeap consolidate(FibonacciHeap &heap) {
+
+		Node *temp_node_for_size = heap.min_ptr;
+		//Node *last_node = heap.min_ptr->left_sibling;
+		heap.root_list.size_of_list = 1;
+		while (temp_node_for_size->right_sibling != heap.min_ptr) {
+			temp_node_for_size = temp_node_for_size->right_sibling;
+			heap.root_list.size_of_list++;
+		}
+
+		//int size_of_array = heap.log_2n(heap.size_of_heap);
+		int size_of_array = heap.size_of_heap;
+		Node *array[size_of_array];
+		for (int i = 0; i < size_of_array; i++) {
+			array[i] = NULL;
+		}
+		//Node *w_node;
+		//Node *temp_1;
+		//Node *temp_2;
+		//int d;
+		//Node *x_node;
+		//Node *y_node;
+		//Node *exchange_node;
+		//w_node = heap.min_ptr;
+		//int i = 0;
+		int index_of_array;
+		//5(6(16()20(100()))10(15())41())11(22())11(19(55())22())
+		//this loop is pretty critical
+		Node *x_node = heap.min_ptr;
+		Node *y_node;
+		Node *exchange_node;
+		Node *w_node = x_node;
+
+		do {
+			w_node = w_node->right_sibling;
+			index_of_array = x_node->degree;
+			if (array[index_of_array] != x_node) {
+				while (array[index_of_array] != NULL) {
+					y_node = array[index_of_array];
+
+					if (x_node->data > y_node->data) {
+						exchange_node = x_node;
+						x_node = y_node;
+						y_node = exchange_node;
+
+					}
+					if (y_node == heap.min_ptr)
+						heap.min_ptr = x_node;
+					heap.fib_heap_link(heap, y_node, x_node);
+					//after consolidating if x_node is the lone root pointer
+					if (x_node->right_sibling == x_node)
+						heap.min_ptr = x_node;
+
+					array[index_of_array] = NULL;
+					index_of_array++;
+				}
+			}
+			array[index_of_array] = x_node;
+
+			x_node = x_node->right_sibling;
+		} while (x_node != heap.min_ptr);
+//		Y
+		//heap.print_fib_heap(heap);
+		heap.min_ptr = NULL;
+
+		// in consolidate operation size of the heap shouldnt be altered because it remains same
+		for (int i = 0; i < size_of_array; i++) {
+			if (array[i] != NULL) {
+				if (heap.min_ptr == NULL) {
+					//create a root list for H containing just A[i]
+					heap.root_list = root_list.get_new_list(array[i]);
+					heap.root_list.size_of_list = 1;
+					heap.min_ptr = array[i];
+				} else {
+					//insert A[i] into Heaps root list
+					heap = heap.fib_heap_insert_from_array(heap, array[i]);
+					if ((array[i]->data) < (heap.min_ptr->data)) {
+						heap.min_ptr = array[i];
+					}
+					heap.root_list.size_of_list++;
+				}
+
+			}
+
+		}
+
+		return heap;
+
+	}
+
+	FibonacciHeap fib_heap_link(FibonacciHeap &heap, Node *y_node,
+			Node *x_node) {
+		//remove y from the root list of H
+
+		(y_node->left_sibling)->right_sibling = y_node->right_sibling;
+		(y_node->right_sibling)->left_sibling = y_node->left_sibling;
+		if (x_node->right_sibling == x_node)
+			heap.min_ptr = x_node;
+		y_node->left_sibling = y_node;
+		y_node->right_sibling = y_node;
+		y_node->parent = x_node;
+		if (x_node->child == NULL)
+			x_node->child = y_node;
+		y_node->right_sibling = x_node->child;
+		y_node->left_sibling = (x_node->child)->left_sibling;
+		((x_node->child)->left_sibling)->right_sibling = y_node;
+		(x_node->child)->left_sibling = y_node;
+		if (y_node->data < (x_node->child)->data)
+			x_node->child = y_node;
+		x_node->degree++;
+
+//		Node *left_sibling_of_y = y_node->left_sibling;
+//		Node *right_sibling_of_y = y_node->right_sibling;
+//
+//		left_sibling_of_y->right_sibling = right_sibling_of_y;
+//		right_sibling_of_y->left_sibling = left_sibling_of_y;
+//
+//		//make y a child of x, incrementing x.degree
+//		if (x_node->child != NULL) {
+//			y_node->right_sibling = x_node->child->right_sibling;
+//			y_node->left_sibling = x_node->child;
+//
+//			y_node->right_sibling->left_sibling = y_node;
+//			x_node->child->right_sibling = y_node;
+//			x_node->degree++;
+//		} else {
+//			x_node->child = y_node;
+//			y_node->right_sibling = y_node;
+//			y_node->left_sibling = y_node;
+//			x_node->degree = 1;
+//		}
+//
+//		y_node->mark = false;
+		return heap;
+
+	}
+
+	// fibonacci extract min operation
+
+	Node* fib_heap_extract_min(FibonacciHeap &temp_heap) {
+
+		Node *temp_min_ptr = temp_heap.min_ptr;
+		Node *temp_node, *temp_node_f_child, *temp_node_l_child;
+
+		Node *temp_min_ptr_right_sibling = temp_min_ptr->right_sibling;
+		Node *temp_min_ptr_left_sibling = temp_min_ptr->left_sibling;
+		// if tempmin ptr is null then the fibonacci heap is already empty
+		if (temp_min_ptr != NULL) {
+			if (temp_min_ptr->degree != 0) {
+
+//				for (int i = 0; i < temp_min_ptr->degree; i++) {
+//					temp_heap.fib_heap_insert_from_array(temp_heap, temp_node);
+//					temp_node->parent = NULL;
+//					temp_node = temp_node->right_sibling;
+//					//iterate through the direct child list through right siblings
+//					// and add them to the root list
+//
+//				}
+				temp_node_f_child = temp_heap.min_ptr->child;
+				temp_node_l_child = temp_node_f_child;
+				while (temp_node_l_child->right_sibling != temp_node_f_child) {
+					temp_node_l_child = temp_node_l_child->right_sibling;
+
+				}
+
+				//more that one root nodes
+				if (temp_heap.min_ptr != temp_heap.min_ptr->right_sibling) {
+
+					temp_node_l_child->right_sibling =
+							temp_heap.min_ptr->right_sibling;
+					temp_heap.min_ptr->right_sibling->left_sibling =
+							temp_node_l_child;
+
+					temp_node_f_child->left_sibling = temp_heap.min_ptr;
+					temp_heap.min_ptr->right_sibling = temp_node_f_child;
+
+				} else {
+					temp_heap.min_ptr->right_sibling = temp_node_f_child;
+					temp_node_f_child->left_sibling = temp_heap.min_ptr;
+					temp_node_l_child->right_sibling = temp_heap.min_ptr;
+					temp_heap.min_ptr->left_sibling = temp_node_l_child;
+
+				}
+
+			}
+
+			//following is the removing of temp pointer from the root list
+			temp_min_ptr_right_sibling = temp_min_ptr->right_sibling;
+			temp_min_ptr_left_sibling = temp_min_ptr->left_sibling;
+
+			temp_min_ptr_left_sibling->right_sibling =
+					temp_min_ptr_right_sibling;
+			temp_min_ptr_right_sibling->left_sibling =
+					temp_min_ptr_left_sibling;
+
+			if (temp_heap.root_list.head == temp_min_ptr) {
+
+				temp_heap.root_list.head = temp_min_ptr_left_sibling;
+			}
+
+			if (temp_heap.root_list.tail == temp_min_ptr) {
+
+				temp_heap.root_list.tail = temp_min_ptr_right_sibling;
+			}
+
+			if (temp_min_ptr == temp_min_ptr->right_sibling) {
+
+				temp_heap.min_ptr = NULL;
+				temp_heap.size_of_heap = 0;
+
+				//temp_heap.root_list=(CircularLinkedListClass)NULL;
+				return temp_heap.min_ptr;
+
+			}
+
+			else {
+
+				temp_heap.min_ptr = temp_min_ptr->right_sibling;
+
+				temp_heap.size_of_heap--;
+				//call consolidate function
+//				cout << "printing before consolidating: removed the node"
+//						<< endl;
+
+//				temp_heap.print_fib_heap(temp_heap);
+
+				temp_heap = temp_heap.consolidate(temp_heap);
+
+			}
+			//cout << "printing after consolidating: removed the node" << endl;
+			//temp_heap.print_fib_heap(temp_heap);
+			//cout << "min pointer is : " << temp_heap.min_ptr->data<< endl;
+
+		}
+
+		return temp_heap.min_ptr;
+
+	}
+
+	// printing the fib heap
+
+	void print_fib_heap(FibonacciHeap temp_heap) {
+
+		Node *temp_node;
+		temp_node = temp_heap.min_ptr;
+		if (temp_node == NULL) {
+			cout << endl << "Heap is empty!" << endl;
+			return;
+		}
+		while (temp_node->right_sibling != temp_heap.min_ptr) {
+			print_tree(temp_node);
+			temp_node = temp_node->right_sibling;
+
+		}
+		print_tree(temp_node);
+		cout << endl;
+
+		cout << "Size of the Heap : " << temp_heap.size_of_heap << endl;
+		cout << "Size of the Root list : " << temp_heap.root_list.size_of_list
+				<< endl;
+		cout << "Min pointer value : " << temp_heap.min_ptr->data << endl;
+
+		return;
+
+	}
+
+	void print_tree(Node *root_node) {
+		//base case
+
+		Node *temp_node;
+		cout << root_node->data << "(";
+
+		if (root_node->child != NULL) {
+
+			temp_node = root_node->child;
+			while (temp_node->right_sibling != root_node->child) {
+				print_tree(temp_node);
+				temp_node = temp_node->right_sibling;
+			}
+			print_tree(temp_node);
+
+		}
+
+		cout << ")";
+		return;
+
+	}
+
+	void create_fib_heap_user_interface() {
+		// enter the heap contents in the following format
+
+		// nodevalue(children of the nodevalue)
+
+		//1()6()2()3()4(10()9(6()22()0()55()))
+		//here 4 has children 10,9 and 9 in turn has childs 6,22,0,55
+
+		FILE *f = fopen("input_heap_contents.txt", "rb");
+		fseek(f, 0, SEEK_END);
+		long fsize = ftell(f);
+		fseek(f, 0, SEEK_SET);
+
+		char *heap_contents = (char*) malloc(fsize + 1);
+		fread(heap_contents, fsize, 1, f);
+		fclose(f);
+
+		heap_contents[fsize] = 0;
+
+		cout << "You have entered: " << endl;
+
+		//1(2(3()4()))2()
+
+		cout << heap_contents;
+
+	}
+
+	FibonacciHeap enter_heap_contents_ui(FibonacciHeap &new_heap) {
+
+		int n;
+		int input_value;
+
+		cout << "Let's start" << endl;
+		cout
+				<< "Enter the number of elements that you want your heap to have ? "
+				<< endl;
+		//cin >> n;
+
+//		for (int i = 0; i < n; i++) {
+//			cout << "Enter the value of node : ";
+//			cin >> input_value;
+//			new_heap=new_heap.fib_heap_insert(new_heap,new Node(input_value));
+//			//new_heap = new_heap.fib_heap_insert(new_heap, new Node(20 - i));
+//		}
+
+		new_heap.fib_heap_insert(new_heap, new Node(5));
+		new_heap.fib_heap_insert(new_heap, new Node(10));
+		new_heap.fib_heap_insert(new_heap, new Node(15));
+		new_heap.fib_heap_insert(new_heap, new Node(20));
+		new_heap.fib_heap_insert(new_heap, new Node(100));
+		new_heap.fib_heap_insert(new_heap, new Node(6));
+		new_heap.fib_heap_insert(new_heap, new Node(4));
+		new_heap.fib_heap_insert(new_heap, new Node(1));
+		new_heap.fib_heap_insert(new_heap, new Node(11));
+		new_heap.fib_heap_insert(new_heap, new Node(22));
+		new_heap.fib_heap_insert(new_heap, new Node(16));
+		new_heap.fib_heap_insert(new_heap, new Node(1));
+		new_heap.fib_heap_insert(new_heap, new Node(11));
+		new_heap.fib_heap_insert(new_heap, new Node(22));
+		new_heap.fib_heap_insert(new_heap, new Node(19));
+		new_heap.fib_heap_insert(new_heap, new Node(55));
+		new_heap.fib_heap_insert(new_heap, new Node(41));
+
+		cout << endl << "Size of the root list : "
+				<< new_heap.root_list.size_of_list;
+		cout << endl;
+		cout << "Here is your heap : " << endl;
+
+		new_heap.print_fib_heap(new_heap);
+
+		return new_heap;
+
+	}
+
+	Node* traverse_tree_to_find(Node *root_node, int value) {
+		//depth first traversal
+		Node *temp_node;
+		Node *found_node = NULL;
+		if (root_node->data == value) {
+			found_node = root_node;
+			return found_node;
+		}
+
+		if (root_node->child != NULL) {
+
+			temp_node = root_node->child;
+			while (temp_node->right_sibling != root_node->child) {
+				found_node = traverse_tree_to_find(temp_node, value);
+				if (found_node != NULL) {
+					return found_node;
+				}
+				temp_node = temp_node->right_sibling;
+			}
+
+			found_node = traverse_tree_to_find(temp_node, value);
+
+		}
+
+		return found_node;
+
+	}
+
+	Node* find_node_by_value(FibonacciHeap temp_heap, int value) {
+		Node *temp_node;
+		Node *found_node = NULL;
+		temp_node = temp_heap.min_ptr;
+
+		//traversing the rootlist
+		while (temp_node->right_sibling != temp_heap.min_ptr) {
+			found_node = temp_heap.traverse_tree_to_find(temp_node, value);
+			if (found_node != NULL) {
+				break;
+			}
+
+			temp_node = temp_node->right_sibling;
+
+		}
+		if (found_node == NULL) {
+			found_node = traverse_tree_to_find(temp_node, value);
+		}
+
+		cout << endl;
+		return found_node;
+
+	}
+
+//	FibonacciHeap populate_heap_for_testing() {
+//
+//
+//		return new_heap;
+//
+//	}
+
+	//visualize in 3 levels
+	void driving_function_fibclass() {
+
+		//we will now make a proper user interface for the inserting of elements into the fib heap from the
+		// start so the user has flexibility in the interaction.
+		//it generally supports create heaps from scratch and create childs for each of the nodes inserted
+
+		FibonacciHeap temp_heap;
+		FibonacciHeap new_heap;
+
+		Node *found_node = NULL;
+
+		char choice_build_heap, choice_operations;
+		int operation_option, value_to_be_decreased, value_decreased_to;
+		//int input_value,n;
+
+		cout << "Welcome to Fibonacci Heap wizard!" << endl;
+
+		cout << "Do you want to build a heap now ? (Y/N)" << endl;
+
+		cin >> choice_build_heap;
+		choice_build_heap = 'Y';
+
+		switch (choice_build_heap) {
+		case 'Y':
+
+			new_heap = new_heap.enter_heap_contents_ui(new_heap);
+
+			cout
+					<< "Do you want to perform some operations on your heap. (Y/N) "
+					<< endl;
+			cin >> choice_operations;
+
+			choice_operations = 'Y';
+			while (choice_operations == 'Y') {
+				switch ('Y') {
+				case 'Y':
+					cout << "Enter option number for operations among below : "
+							<< endl;
+					cout << "1. Find the minimum of your heap." << endl;
+					cout << "2. Delete the minimum of your heap." << endl;
+					cout << "3. Decrease any key from your heap." << endl;
+					cin >> operation_option;
+					//	operation_option=3;
+
+					switch (operation_option) {
+					case 1:
+						cout << "The minimum node value of your heap is : "
+								<< new_heap.min_ptr->data << endl;
+
+						break;
+
+					case 2:
+						cout << "Heap before Extract min operation :" << endl;
+						new_heap.print_fib_heap(new_heap);
+
+						new_heap.fib_heap_extract_min(new_heap);
+						cout << "Heap after Extract min operation : " << endl;
+
+						new_heap.print_fib_heap(new_heap);
+
+						break;
+					case 3:
+
+						cout << endl << "Here is your Heap : " << endl;
+
+						new_heap.print_fib_heap(new_heap);
+						cout << "Enter the value of the node to be decreased"
+								<< endl;
+						cin >> value_to_be_decreased;
+						cout
+								<< "Enter the value to which it has to be decreased"
+								<< endl;
+						cin >> value_decreased_to;
+						//new_heap = new_heap.populate_heap_for_testing();
+						//overide
+//						value_to_be_decreased = 22;
+//						value_decreased_to = -10;
+
+						// find the node address
+						found_node = new_heap.find_node_by_value(new_heap,
+								value_to_be_decreased);
+						if (found_node == NULL) {
+							cout << "Value not found in the heap!";
+						} else {
+							cout << "Value found from the heap is : "
+									<< found_node->data << endl;
+
+							cout << "Heap before decreasing the key : " << endl;
+							new_heap.print_fib_heap(new_heap);
+							new_heap = new_heap.fib_heap_decrease_key(new_heap,
+									found_node, value_decreased_to);
+							cout << "Heap after decreasing the key : " << endl;
+							new_heap.print_fib_heap(new_heap);
+							cout << "Changed min pointer: "
+									<< new_heap.min_ptr->data << endl;
+						}
+
+						break;
+
+					default:
+
+						cout << "Please enter a valid response." << endl;
+					}
+
+					break;
+
+				case 'N':
+					cout << "See you later!" << endl;
+					break;
+				default:
+					cout << "Please enter a valid response." << endl;
+				}
+
+				cout
+						<< "Do you want to perform some operations on your heap. (Y/N) "
+						<< endl;
+				cin >> choice_operations;
+				//choice_operations = 'Y';
+
+			}
+			;
+
+			break;
+
+		case 'N':
+			cout << "See you later!" << endl;
+			break;
+		default:
+			cout << "Please enter a valid response." << endl;
+		}
+
+		/// this is for the inserting some childs into the fib heap and print the childs in the format
+//		FibonacciHeap temp_heap;
+//
+//
+//		Node* temp_node;
+//		Node* temp_nodefor9;
+//		temp_node = temp_heap.root_list.insert_begin(4);
+//		CircularLinkedListClass childof4,childof9;
+//		temp_nodefor9=childof4.insert_begin(9);
+//		temp_node->child=childof4.insert_begin(10);
+//		childof9.insert_begin(55);
+//		childof9.insert_begin(0);
+//		childof9.insert_begin(22);
+//		temp_nodefor9->child=childof9.insert_begin(6);
+//
+//
+//
+//		temp_heap.root_list.insert_begin(3);
+//		temp_heap.root_list.insert_begin(2);
+//		CircularLinkedListClass templist;
+//		temp_heap=temp_heap.fib_heap_insert(temp_heap, templist.get_new_node(1));
+//		temp_heap=temp_heap.fib_heap_insert(temp_heap, templist.get_new_node(6));
+//		temp_heap.root_list.print_head_and_tail();
+//		temp_heap.root_list.print_list();
+//		cout << "min pointer data   " << temp_heap.min_ptr->data <<endl;
+//
+//		temp_heap.print_fib_heap(temp_heap);
+
+//		FibonacciHeap temp_heap, temp_heap2;
+//		temp_heap.root_list.insert_begin(25);
+//		temp_heap.root_list.insert_begin(22);
+//		temp_heap.root_list.insert_begin(55);
+//		CircularLinkedListClass templist;
+//		temp_heap=temp_heap.fib_heap_insert(temp_heap, templist.get_new_node(2));
+//		temp_heap=temp_heap.fib_heap_insert(temp_heap, templist.get_new_node(3));
+//		temp_heap.root_list.print_head_and_tail();
+//		temp_heap.root_list.print_list();
+//		cout << "min pointer data   " << temp_heap.min_ptr->data <<endl;
+//
+//
+//		temp_heap2.root_list.insert_begin(555);
+//		temp_heap2.root_list.insert_begin(666);
+//		temp_heap2.root_list.insert_begin(1);
+//		CircularLinkedListClass templist2;
+//		temp_heap2=temp_heap2.fib_heap_insert(temp_heap2, templist2.get_new_node(2));
+//		temp_heap2=temp_heap2.fib_heap_insert(temp_heap2, templist2.get_new_node(3));
+//		temp_heap2=temp_heap2.fib_heap_insert(temp_heap2, templist2.get_new_node(0));
+//		temp_heap2=temp_heap2.fib_heap_insert(temp_heap2, templist2.get_new_node(0));
+//
+//		temp_heap2.root_list.print_head_and_tail();
+//		temp_heap2.root_list.print_list();
+//		cout << "min pointer data   " << temp_heap2.min_ptr->data <<endl;
+//
+//		cout << "after merging" <<  endl;
+//
+//
+//		temp_heap = temp_heap.fib_heap_union(temp_heap,temp_heap2);
+//		temp_heap.root_list.print_head_and_tail();
+//		temp_heap.root_list.print_list();
+//		cout << "min pointer data   " << temp_heap.min_ptr->data <<endl;
+
+	}
+
+};
+
+int main() {
+	FibonacciHeap test_heap;
+	test_heap.driving_function_fibclass();
+	//int input_value;
+
+	//cout << endl << input_value;
+
+	// we must show all the written functions are working correctly or not
+	// we must make example of the functions and show the results after each function
+
+//    CircularLinkedListClass::node* tempnode;
+//    cl1.insert_begin(1);
+//    cl1.insert_begin(2);
+//    cl1.insert_begin(3);
+//    cl1.insert_begin(4);
+//    cl1.insert_begin(5);
+//    cl1.insert_begin(6);
+//
+//
+//    cl1.print_list();
+//    cl1.print_head_and_tail();
+//    cout << "size : " << cl1.size_of_list << endl;
+//
+//
+//    cl2.insert_begin(10);
+//    cl2.insert_begin(20);
+//    tempnode = cl2.insert_begin(30);
+//    cl2.insert_begin(40);
+//    cl2.insert_begin(50);
+//
+//
+//    cl2.print_list();
+//    cl2.print_head_and_tail();
+//    cout << "size : " << cl2.size_of_list << endl;
+//
+//    cl1.concatenate_lists(cl1,cl2);
+//
+//    cl1.print_list();
+//    cl1.print_head_and_tail();
+//    cout << "size : " << cl1.size_of_list << endl;
+//
+//
+//    cl1.delete_given_node(tempnode);
+//    cout << "after delete" << endl;
+//    cl1.print_list();
+//    cl1.print_head_and_tail();
+//    cout << "size : " << cl1.size_of_list << endl;
+//
+
+	return 0;
+}
